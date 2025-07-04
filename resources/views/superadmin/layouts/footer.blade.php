@@ -7,7 +7,7 @@
      <footer class="sticky-footer bg-white">
          <div class="container my-auto">
              <div class="copyright text-center my-auto">
-                 <span>Copyright &copy; SCBD 2023</span>
+                 <span>Copyright &copy; BGS 2025</span>
              </div>
          </div>
      </footer>
@@ -33,6 +33,12 @@
  <!-- Page level custom scripts -->
  {{-- <script src="{{ asset('SbAdmin/js/demo/chart-area-demo.js') }}"></script>
  <script src="{{ asset('SbAdmin/js/demo/chart-pie-demo.js') }}"></script> --}}
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
  </body>
 

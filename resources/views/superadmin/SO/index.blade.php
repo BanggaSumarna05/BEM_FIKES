@@ -21,13 +21,14 @@
             <div class="table-responsive">
                 <table class="table table-bordered" id="SOTable" width="100%" cellspacing="0">
                     <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Jabatan</th>
-                            <th>Nama</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Jabatan</th>
+                                <th>Nama</th>
+                                <th>Foto</th> {{-- Tambahkan kolom ini --}}
+                                <th>Action</th>
+                            </tr>
+                        </thead>
                     <tbody>
                     </tbody>
                 </table>
@@ -40,27 +41,41 @@
                 processing: true,
                 serverSide: true,
                 ajax: '{{ url('/superadmin/SO/data') }}',
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'jabatan_so.name_jabatan', // Akses nama jabatan dari relasi jabatan_so
-                        name: 'jabatan_so.name_jabatan'
-                    },
-                    {
-                        data: 'name_value_so',
-                        name: 'name_value_so'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    },
-                ]
+                columns: [
+    {
+        data: 'DT_RowIndex',
+        name: 'DT_RowIndex',
+        orderable: false,
+        searchable: false
+    },
+    {
+        data: 'jabatan_so.name_jabatan',
+        name: 'jabatan_so.name_jabatan'
+    },
+    {
+        data: 'name_value_so',
+        name: 'name_value_so'
+    },
+    {
+        data: 'photo',
+        name: 'photo',
+        render: function(data, type, full, meta) {
+            if (data) {
+                return '<img src="/storage/' + data + '" height="50" />';
+            }
+            return 'No photo';
+        },
+        orderable: false,
+        searchable: false
+    },
+    {
+        data: 'action',
+        name: 'action',
+        orderable: false,
+        searchable: false
+    }
+]
+
             });
 
             $('#SOTable').on('click', 'a.delete-value-so', function(e) {

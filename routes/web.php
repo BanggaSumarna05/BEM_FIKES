@@ -16,7 +16,7 @@ use App\Http\Controllers\SOController;
 use App\Http\Controllers\GaleryController;
 use App\Http\Controllers\AspirationController;
 use App\Http\Controllers\LandingPageController;
-
+use App\Http\Controllers\ProkerController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -155,13 +155,27 @@ Route::middleware(['auth', 'check.role:superadmin'])->prefix('superadmin')->grou
         Route::put('/Aspiration/updateStatus/{id}', [AspirationController::class, 'updateStatus']);
         Route::get('/Aspiration/print_pdf/{status}', [AspirationController::class, 'pdfPrint']);
     });
+
+
+
+
+
+Route::prefix('/')->group(function () {
+    Route::get('/proker', [ProkerController::class, 'index']);
+    Route::get('/proker/json', [ProkerController::class, 'json']);
+    Route::get('/proker/create', [ProkerController::class, 'create']);
+    Route::post('/proker/store', [ProkerController::class, 'store']);
+    Route::get('/proker/edit/{id}', [ProkerController::class, 'edit']);
+    Route::post('/proker/update/{id}', [ProkerController::class, 'update']);
+    Route::get('/proker/destroy/{id}', [ProkerController::class, 'destroy']);
+});
+
 });
 
 
 
 Route::middleware(['auth', 'check.role:admin'])->prefix('admin')->group(function () {
-    // Route::get('/', [DashboardKasubagController::class, 'ViewKasubag'])->name('kasubag.dashboard');
-    Route::get('/', [DashboardAdminController::class, 'index'])->name('admin.dashboard');
+Route::get('/', [DashboardAdminController::class, 'index'])->name('admin.dashboard');
 
     Route::prefix('/')->group(function () {
         Route::get('/Aspiration', [AspirationController::class, 'index']);

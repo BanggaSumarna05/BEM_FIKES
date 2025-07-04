@@ -7,6 +7,8 @@ use App\Models\Profile;
 use App\Models\Article;
 use App\Models\Galery;
 use App\Models\category_aspiration;
+use App\Models\Proker;
+use App\Models\value_so;
 
 class LandingPageController extends Controller
 {
@@ -18,15 +20,14 @@ class LandingPageController extends Controller
     public function index()
     {
         $profile = Profile::all();
-        // $article = Article::all();
-        // Mendapatkan semua artikel dari model atau sumber data lainnya, diurutkan berdasarkan tanggal pembuatan
         $latestArticles = Article::orderBy('created_date', 'desc')->get();
-
-        // Mengambil 3 artikel terbaru
         $article = $latestArticles->take(3);
         $galeries = Galery::all();
+        $prokers = Proker::all();
         $categories = category_aspiration::all();
-        return view('LandingPage.index', compact('profile', 'article', 'categories', 'galeries'));
+        $jabatanSo = value_so::with('jabatanSo')->orderBy('jabatan_so_id')->get();
+
+        return view('LandingPage.index', compact('profile', 'article', 'categories', 'galeries', 'prokers','jabatanSo'));
     }
 
     /**

@@ -1,8 +1,11 @@
 @include('superadmin.layouts.sidebar')
 @include('superadmin.layouts.header')
-{{-- @include('superadmin.layouts_baru.content') --}}
 
-<main>
-    @yield('container') <!-- Ini adalah tempat untuk konten yang akan digantikan -->
+<main class="py-4">
+    {{-- Bagian konten utama --}}
+    @yield('container') {{-- Bisa diganti content juga --}}
 </main>
+
+@yield('scripts') {{-- Penting untuk DataTables JS! --}}
+
 @include('superadmin.layouts.footer')

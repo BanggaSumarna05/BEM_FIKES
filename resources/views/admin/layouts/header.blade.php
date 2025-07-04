@@ -9,7 +9,9 @@
     <meta name="author" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>SB Admin 2 - Dashboard</title>
+    <title>BEM FIKES - Dashboard</title>
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="{{ asset('assets/logo.png') }}">
 
     <!-- Custom fonts for this template-->
     <link href="{{ asset('SbAdmin/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
@@ -213,7 +215,7 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::user()->name ?? 'Guest' }} </span>
 
                             {{-- <img class="img-profile rounded-circle" src="asset('SbAdmin/img/undraw_profile.svg"> --}}
                             <img class="img-profile rounded-circle" src="{{ asset('SbAdmin/img/undraw_profile.svg') }}">
@@ -229,10 +231,10 @@
                                 <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Settings
                             </a> --}}
-                            <a class="dropdown-item" href="#">
+                            {{-- <a class="dropdown-item" href="#">
                                 <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Activity Log
-                            </a>
+                            </a> --}}
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ route('logout') }}" data-toggle="modal"
                                 data-target="#logoutModal">

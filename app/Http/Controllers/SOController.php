@@ -5,95 +5,81 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\jabatan_so;
 use App\Models\value_so;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\DataTables;
 
 class SOController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
     public function json()
-    {
-        // Retrieve data from the 'value_sos' table and include related information from 'jabatan_sos' table
-        $data = value_so::with('jabatanSo')->get();
-        $index = 1;
+{
+    $data = value_so::with('jabatanSo')->get();
+    $index = 1;
 
-        return DataTables::of($data)
-            ->addColumn('DT_RowIndex', function ($data) use (&$index) {
-                return $index++; // Menambahkan nomor urutan baris
-            })
-            ->addColumn('action', function ($valueSo) {
-                $editUrl = url('/superadmin/SO/edit/' . $valueSo->id);
-                $deleteUrl = url('/superadmin/SO/destroy/' . $valueSo->id);
-                return '<a href="' . $editUrl . '" class="btn btn-primary">Edit</a> ' .
-                    '<a href="#" class="btn btn-danger delete-value-so" data-url="' . $deleteUrl . '">Delete</a>';
-            })
-            ->rawColumns(['action'])
-            ->toJson();
-    }
+    return DataTables::of($data)
+        ->addColumn('DT_RowIndex', function () use (&$index) {
+            return $index++;
+        })
+        ->addColumn('photo', function ($valueSo) {
+            return $valueSo->photo; // kirim path foto saja, akan di-render di blade
+        })
+        ->addColumn('action', function ($valueSo) {
+            $editUrl = url('/superadmin/SO/edit/' . $valueSo->id);
+            $deleteUrl = url('/superadmin/SO/destroy/' . $valueSo->id);
+            return '<a href="' . $editUrl . '" class="btn btn-primary">Edit</a> ' .
+                   '<a href="#" class="btn btn-danger delete-value-so" data-url="' . $deleteUrl . '">Delete</a>';
+        })
+        ->rawColumns(['action'])
+        ->toJson();
+}
+
 
     public function index()
     {
         return view('superadmin.SO.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('superadmin.SO.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name_jabatan' => 'required',
-            'name_value_so' => 'required',
-        ]);
+ public function store(Request $request)
+{
+    $request->validate([
+        'name_jabatan' => 'required',
+        'name_value_so' => 'required',
+        'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+    ]);
 
-        // Create jabatan_so
-        $jabatan = jabatan_so::create([
-            'name_jabatan' => $request->input('name_jabatan')
-        ]);
+    // Simpan jabatan
+    $jabatan = jabatan_so::create([
+        'name_jabatan' => $request->input('name_jabatan')
+    ]);
 
-        // Create value_so and associate it with the newly created jabatan_so
-        $valueSo = value_so::create([
-            'name_value_so' => $request->input('name_value_so'),
-            'jabatan_so_id' => $jabatan->id // Using the id of the newly created jabatan_so
-        ]);
-
-        return redirect('/superadmin/SO')->with('success', 'organizational structure created successfully.');
-    }
+    // Proses upload foto
+    if ($request->hasFile('photo')) {
+    $photoPath = $request->file('photo')->store('struktur_organisasi', 'public');
+} else {
+    $photoPath = null;
+}
 
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // Simpan value_so
+    value_so::create([
+    'name_value_so' => $request->name_value_so,
+    'jabatan_so_id' => $jabatan->id,
+    'photo' => $photoPath,
+]);
+
+
+    return redirect('/superadmin/SO')->with('success', 'Organizational structure created successfully.');
+}
+
+
+
+    public function show($id) {}
+
     public function edit($id)
     {
         $jabatanSo = jabatan_so::find($id);
@@ -107,53 +93,48 @@ class SOController extends Controller
         }
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name_jabatan' => 'required',
-            'name_value_so' => 'required',
+{
+    $request->validate([
+        'name_jabatan' => 'required',
+        'name_value_so' => 'required',
+        'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+    ]);
+
+    $jabatanSo = jabatan_so::find($id);
+    if ($jabatanSo) {
+        $jabatanSo->update([
+            'name_jabatan' => $request->input('name_jabatan')
         ]);
-
-        // Update jabatan_so
-        $jabatanSo = jabatan_so::find($id);
-        if ($jabatanSo) {
-            $jabatanSo->update([
-                'name_jabatan' => $request->input('name_jabatan')
-            ]);
-        }
-
-        // Update value_so
-        $valueSo = value_so::where('jabatan_so_id', $id)->first();
-        if ($valueSo) {
-            $valueSo->update([
-                'name_value_so' => $request->input('name_value_so')
-            ]);
-        }
-
-        return redirect('/superadmin/SO')->with('success', 'Organizational structure updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    $valueSo = value_so::where('jabatan_so_id', $id)->first();
+
+    if ($valueSo) {
+        $data = [
+            'name_value_so' => $request->input('name_value_so'),
+        ];
+
+        if ($request->hasFile('photo')) {
+            $photoPath = $request->file('photo')->store('struktur_organisasi', 'public');
+            $data['photo'] = $photoPath;
+        }
+
+        $valueSo->update($data);
+    }
+
+    return redirect('/superadmin/SO')->with('success', 'Organizational structure updated successfully.');
+}
+
     public function destroy($id)
     {
-        // Delete jabatan_so
-        $deletedJabatan = jabatan_so::destroy($id);
+        $valueSo = value_so::where('jabatan_so_id', $id)->first();
+        if ($valueSo && $valueSo->photo && Storage::disk('public')->exists($valueSo->photo)) {
+            Storage::disk('public')->delete($valueSo->photo);
+        }
 
-        // Delete value_so associated with the deleted jabatan_so
         $deletedValue = value_so::where('jabatan_so_id', $id)->delete();
+        $deletedJabatan = jabatan_so::destroy($id);
 
         if ($deletedJabatan || $deletedValue) {
             return response()->json(['message' => 'Organizational structure deleted successfully.']);

@@ -8,10 +8,11 @@
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                <div class="sidebar-brand-icon ">
+                  <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" width="40"  class="me-2">
+
                 </div>
-                <div class="sidebar-brand-text mx-3">SCBD</div>
+                <div class="sidebar-brand-text mx-3">BEM-FIKES</div>
             </a>
 
             <!-- Divider -->
@@ -76,6 +77,16 @@
                     <i class="fas fa-fw fa-newspaper"></i>
                     <span>Article</span>
                 </a>
+
+
+                <li class="nav-item @active('superadmin/proker')">
+                {{-- <li class="nav-item {{ request()->is('superadmin/Proker*') ? 'active' : '' }}"> --}}
+    <a class="nav-link" href="{{ url('/superadmin/proker') }}">
+        <i class="fas fa-fw fa-tasks"></i>
+        <span>Program Kerja</span>
+    </a>
+</li>
+
             </li>
             <li class="nav-item @active('superadmin/Galery')">
                 <a class="nav-link" href="{{ url('/superadmin/Galery') }}">

@@ -8,10 +8,10 @@
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                <div class="sidebar-brand-icon">
+                     <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" width="40"  class="me-2">
                 </div>
-                <div class="sidebar-brand-text mx-3">SCBD</div>
+                <div class="sidebar-brand-text mx-3">BEM-FIKES</div>
             </a>
 
             <!-- Divider -->
